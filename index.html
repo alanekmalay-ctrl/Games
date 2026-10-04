@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSHYAR OFFICE · Games</title>
+<style>
+:root{--bg:#0a0804;--card:#16120a;--line:#4a3a12;--ink:#fff8e6;--muted:#b3a47a;--blue:#f5b800;--red:#ff9d00;--teal:#2de2c8}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 500px at 0 0,#f5b80030,transparent),radial-gradient(1200px 500px at 100% 100%,#ff7a0025,transparent),var(--bg);color:var(--ink);font-family:Roboto,"Segoe UI",Arial,sans-serif;min-height:100vh}
+main{max-width:1000px;margin:0 auto;padding:20px 14px 48px}
+a.back{color:var(--blue);text-decoration:none;font-size:.9rem}
+h1{margin:14px 0 4px;font-size:2rem;letter-spacing:.04em}
+.sub{color:var(--muted);margin:0 0 18px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font:inherit;cursor:pointer}
+.tabs button[aria-pressed=true]{border-color:var(--blue);box-shadow:0 0 12px #f5b80066;color:var(--blue)}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.game{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pic{aspect-ratio:3/4;background:#211a0c;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.info{padding:8px 10px 10px}
+.name{font-weight:700;overflow-wrap:anywhere}
+.tag{display:inline-block;margin-top:4px;font-size:.78rem;font-weight:700;padding:0 8px;border-radius:4px;color:#0a0804}
+.PS3{background:#aab2d5}.PS4{background:var(--blue)}.PS5{background:var(--teal)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <h1>GAMES LIST</h1>
+  <p class="sub">PS3 · PS4 · PS5</p>
+  <input id="q" type="search" placeholder="Search..." aria-label="Search games">
+  <div class="tabs" id="tabs"></div>
+  <div class="grid" id="grid"></div>
+</main>
+<script>
+/* ====== زێدەکرنا یاریان ل ڤێرێ ======
+   هەر یاریەک یەک ڕێزە. "img" ئارەزوومەندانەیە (مەسەلەن "images/cod.jpg"). */
+var GAMES=[
+  {name:"Call of Duty",     platform:"PS5", img:""},
+  {name:"FIFA 23",          platform:"PS4", img:""},
+  {name:"GTA V",            platform:"PS3", img:""}
+];
+/* ================================== */
+var filter="All",query="";
+function render(){
+  var t=document.getElementById("tabs");t.innerHTML="";
+  ["All","PS5","PS4","PS3"].forEach(function(f){
+    var b=document.createElement("button");b.textContent=f;b.setAttribute("aria-pressed",f===filter);
+    b.onclick=function(){filter=f;render()};t.appendChild(b);
+  });
+  var g=document.getElementById("grid");g.innerHTML="";
+  var list=GAMES.filter(function(x){
+    return (filter==="All"||x.platform===filter)&&x.name.toLowerCase().indexOf(query)>-1;
+  });
+  if(!list.length){g.innerHTML='<div class="empty">No games found.</div>';return}
+  list.forEach(function(x){
+    var d=document.createElement("div");d.className="game";
+    var p=document.createElement("div");p.className="pic";
+    if(x.img){var im=document.createElement("img");im.src=x.img;im.alt=x.name;im.loading="lazy";
+      im.onerror=function(){p.textContent="🎮"};p.appendChild(im)}else{p.textContent="🎮"}
+    var i=document.createElement("div");i.className="info";
+    var n=document.createElement("div");n.className="name";n.textContent=x.name;
+    var s=document.createElement("span");s.className="tag "+x.platform;s.textContent=x.platform;
+    i.appendChild(n);i.appendChild(s);d.appendChild(p);d.appendChild(i);g.appendChild(d);
+  });
+}
+document.getElementById("q").oninput=function(e){query=e.target.value.trim().toLowerCase();render()};
+render();
+</script>
+</body>
+</html>
