@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://en.wikipedia.org" crossorigin>
+<link rel="preconnect" href="https://upload.wikimedia.org">
+<title>HSHYAR OFFICE · Games</title>
+<style>
+:root{--bg:#0a0804;--card:#16120a;--line:#4a3a12;--ink:#fff8e6;--muted:#b3a47a;--blue:#f5b800;--red:#ff9d00;--teal:#2de2c8}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 500px at 0 0,#f5b80030,transparent),radial-gradient(1200px 500px at 100% 100%,#ff7a0025,transparent),var(--bg);color:var(--ink);font-family:Roboto,"Segoe UI",Arial,sans-serif;min-height:100vh}
+main{max-width:1000px;margin:0 auto;padding:20px 14px 48px}
+a.back{color:var(--blue);text-decoration:none;font-size:.9rem}
+h1{margin:14px 0 4px;font-size:2rem;letter-spacing:.04em}
+.sub{color:var(--muted);margin:0 0 18px}
+.owner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:16px}
+.who{display:flex;flex-direction:column;line-height:1.35}
+.who span{color:var(--blue);font-size:.85rem;font-weight:700;letter-spacing:.06em}
+.call{color:#0a0804;background:var(--blue);text-decoration:none;font-weight:700;padding:8px 14px;border-radius:999px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font:inherit;cursor:pointer}
+.tabs button[aria-pressed=true]{border-color:var(--blue);box-shadow:0 0 12px #f5b80066;color:var(--blue)}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.game{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pic{aspect-ratio:3/4;background:#211a0c;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.info{padding:8px 10px 10px}
+.name{font-weight:700;overflow-wrap:anywhere}
+.size{font-size:.8rem;color:var(--muted);margin-top:2px}
+.tag{display:inline-block;margin-top:4px;font-size:.78rem;font-weight:700;padding:0 8px;border-radius:4px;color:#0a0804}
+.PS3{background:#aab2d5}.PS4{background:var(--blue)}.PS5{background:var(--teal)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.pager{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:22px 0 4px}
+.pager button{min-width:40px;height:40px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;font:inherit;font-weight:700;cursor:pointer}
+.pager button[aria-current=page]{background:var(--blue);color:#0a0804;border-color:var(--blue)}
+.pager button:disabled{opacity:.35;cursor:default}
+.pic{position:relative}
+.pic img{opacity:0;transition:opacity .25s}
+.pic img.on{opacity:1}
+.packs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
+.pack{text-align:left;background:linear-gradient(160deg,#2a2008,#16120a 70%);border:1px solid var(--blue);border-radius:14px;padding:12px 14px;color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.pack .cap{font-size:1.5rem;font-weight:900;letter-spacing:.02em}
+.pack .meta{color:var(--muted);font-size:.85rem}
+.pack .price{color:var(--blue);font-weight:800;font-size:1.1rem;margin-top:4px}
+.pkghead{display:none;background:var(--card);border:1px solid var(--blue);border-radius:14px;padding:14px;margin:0 0 16px}
+.pkghead h2{margin:4px 0 2px;font-size:1.6rem}
+.pkghead .price{color:var(--blue);font-weight:800;font-size:1.2rem}
+.pkghead .meta{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;border-radius:999px;padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.main{background:var(--blue);border-color:var(--blue);color:#0a0804}
+.btn.wa{background:#25d366;border-color:#25d366;color:#04140a}
+.linkbtn{background:none;border:0;color:var(--blue);font:inherit;font-weight:700;cursor:pointer;padding:0}
+body.pkg .packs,body.pkg #q,body.pkg #tabs,body.pkg #bar,body.pkg #pager,body.pkg .hint{display:none}
+body.pkg .pkghead{display:block}
+.hint{color:var(--muted);font-size:.85rem;margin:-6px 0 12px}
+.game{position:relative;cursor:pointer;transition:box-shadow .15s,border-color .15s}
+body.pkg .game{cursor:default}
+.check{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-weight:900;color:transparent}
+body.pkg .check{display:none}
+.game.sel{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.game.sel .check{background:var(--blue);border-color:var(--blue);color:#0a0804}
+.cart{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(22,18,10,.94);backdrop-filter:blur(8px);border-top:1px solid var(--blue);display:flex;align-items:center;justify-content:space-between;gap:10px;transform:translateY(110%);transition:transform .2s}
+.cart.show{transform:none}
+.cart .sum b{color:var(--blue)}
+body.has-cart main{padding-bottom:110px}
+dialog{background:var(--card);color:var(--ink);border:1px solid var(--blue);border-radius:16px;padding:0;width:min(520px,calc(100% - 24px));max-height:80vh}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.sheet{padding:16px;display:flex;flex-direction:column;gap:12px;max-height:80vh}
+.sheet h2{margin:0;font-size:1.3rem}
+.sheet ol{margin:0;padding:0 0 0 22px;overflow:auto;flex:1;line-height:1.5}
+.sheet li{padding:4px 0;border-bottom:1px solid var(--line);display:list-item}
+.sheet li span{color:var(--muted);font-size:.85rem}
+.sheet li button{float:right;background:none;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cart,.game,.pic img{transition:none}}
+.selhead{display:none;background:var(--card);border:1px solid var(--blue);border-radius:14px;padding:14px;margin:0 0 14px}
+.selhead h2{margin:0 0 2px;font-size:1.3rem}
+.selhead .meta{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+body.selview .selhead{display:block}
+body.selview .hint{display:none}
+.tabs button.seltab{border-style:dashed}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <h1>GAMES LIST</h1>
+  <p class="sub">PS3 · PS4 · PS5</p>
+  <div class="owner">
+    <div class="who"><b>ALLAN HSHYAR</b><span>HSHYAR OFFICE</span></div>
+    <a class="call" href="tel:+9647505047363" aria-label="Call 0750 504 7363">&#9742; 0750 504 7363</a>
+  </div>
+  <section class="packs" id="packs" aria-label="Packages"></section>
+  <div class="pkghead" id="pkghead"></div>
+  <input id="q" type="search" placeholder="Search..." aria-label="Search games">
+  <div class="tabs" id="tabs"></div>
+  <p class="hint">Tap games to choose them. They go to ✓ My selection.</p>
+  <div class="selhead" id="selhead"></div>
+  <div class="bar" id="bar"></div>
+  <div class="grid" id="grid"></div>
+  <nav class="pager" id="pager" aria-label="Pages"></nav>
+</main>
+<div class="cart" id="cart" role="region" aria-label="Selected games">
+  <div class="sum" id="sum"></div>
+  <div class="row"><button class="btn" id="viewSel">View</button><a class="btn wa" id="waSel" target="_blank" rel="noopener">WhatsApp</a></div>
+</div>
+
+<script>
+/* ====== زێدەکرنا یاریان ل ڤێرێ ======
+   هەر یاریەک یەک ڕێزە. "img" ئارەزوومەندانەیە (مەسەلەن "images/cod.jpg"). */
+var GAMES=[
+  {name:"EA Sports FC 27", platform:"PS4", img:"https://images.pushsquare.com/a1f25ebfe11a5/ea-sports-fc-27-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"PES 27", platform:"PS4", w:"EFootball", img:"", size:"~30 GB"},
+  {name:"Call of Duty: Black Ops 3", platform:"PS4", w:"Call of Duty: Black Ops III", img:"", size:"~100 GB"},
+  {name:"Call of Duty: Modern Warfare 3", platform:"PS4", w:"Call of Duty: Modern Warfare III", img:"https://images.pushsquare.com/9bc0efb483d67/call-of-duty-modern-warfare-3-cover.cover_300x.jpg", size:"~100 GB"},
+  {name:"Call of Duty: Ghosts", platform:"PS4", img:"https://images.pushsquare.com/a3421bc51ba07/call-of-duty-ghosts-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Need for Speed Heat", platform:"PS4", img:"https://images.pushsquare.com/f82f1611083c2/need-for-speed-heat-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Need for Speed Payback", platform:"PS4", img:"https://images.pushsquare.com/30fc86dc6f8ad/need-for-speed-payback-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"Need for Speed Hot Pursuit", platform:"PS4", w:"Need for Speed: Hot Pursuit Remastered", img:"", size:"~25 GB"},
+  {name:"Marvel's Spider-Man", platform:"PS4", w:"Spider-Man (2018 video game)", img:"https://images.pushsquare.com/41790bf1b773b/marvels-spider-man-cover.cover_300x.jpg", size:"~45 GB"},
+  {name:"Spider-Man: Miles Morales", platform:"PS4", img:"https://images.pushsquare.com/3d7cffbb7e61f/marvels-spider-man-miles-morales-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"The Last of Us Part II", platform:"PS4", img:"https://images.pushsquare.com/c071b54d1a200/last-of-us-part-ii-cover.cover_300x.jpg", size:"~80 GB"},
+  {name:"The Last of Us Remastered", platform:"PS4", w:"The Last of Us", img:"https://images.pushsquare.com/06a0ca4a20dc9/last-of-us-remastered-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Ghost of Tsushima", platform:"PS4", img:"https://images.pushsquare.com/58c3c6b2fa46a/ghost-of-tsushima-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Uncharted 4: A Thief's End", platform:"PS4", img:"https://images.pushsquare.com/f28e31f45dd61/uncharted-4-a-thiefs-end-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Uncharted: The Lost Legacy", platform:"PS4", img:"https://images.pushsquare.com/efc09072b5f81/uncharted-the-lost-legacy-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Red Dead Redemption 2", platform:"PS4", img:"https://images.pushsquare.com/7efe4c6a07f2e/red-dead-redemption-2-cover.cover_300x.jpg", size:"~110 GB"},
+  {name:"Red Dead Redemption", platform:"PS4", w:"Red Dead Redemption", img:"https://images.pushsquare.com/79ea82b4767c7/red-dead-redemption-cover.cover_300x.jpg", size:"~12 GB"},
+  {name:"Grand Theft Auto V", platform:"PS4", img:"https://images.pushsquare.com/4737cb9ce78c9/grand-theft-auto-v-cover.cover_300x.jpg", size:"~90 GB"},
+  {name:"Elden Ring", platform:"PS4", img:"https://images.pushsquare.com/b470c9486f247/elden-ring-cover.cover_300x.jpg", size:"~45 GB"},
+  {name:"Minecraft", platform:"PS4", img:"https://images.pushsquare.com/990ffa58929dc/minecraft-cover.cover_300x.jpg", size:"~2 GB"},
+  {name:"Resident Evil 4", platform:"PS4", img:"https://images.pushsquare.com/c6f52e07a53b5/resident-evil-4-cover.cover_300x.jpg", size:"~12 GB"},
+  {name:"Resident Evil 4 Remake", platform:"PS4", w:"Resident Evil 4 (2023 video game)", img:"", size:"~50 GB"},
+  {name:"Tekken 7", platform:"PS4", img:"https://images.pushsquare.com/0a687f8e165be/tekken-7-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"PES 2018: Pro Evolution Soccer", platform:"PS4", w:"Pro Evolution Soccer 2018", img:"https://images.pushsquare.com/07d629fdb2539/pes-2018-pro-evolution-soccer-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"Uncharted: The Nathan Drake Collection", platform:"PS4", img:"https://images.pushsquare.com/edbd957105bc2/uncharted-the-nathan-drake-collection-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Sekiro: Shadows Die Twice", platform:"PS4", img:"https://images.pushsquare.com/d308f98ce2278/sekiro-shadows-die-twice-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"Days Gone", platform:"PS4", img:"https://images.pushsquare.com/97adecd7af8e7/days-gone-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"WWE 2K25", platform:"PS4", img:"https://images.pushsquare.com/33c7dca9c79d1/wwe-2k25-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Call of Duty: Modern Warfare", platform:"PS4", w:"Call of Duty: Modern Warfare (2019 video game)", img:"https://images.pushsquare.com/55315e56f80a3/call-of-duty-modern-warfare-cover.cover_300x.jpg", size:"~100 GB"},
+  {name:"Mortal Kombat 11", platform:"PS4", img:"https://images.pushsquare.com/f3bf25c0cb57d/mortal-kombat-11-cover.cover_300x.jpg", size:"~45 GB"},
+  {name:"Crash Bandicoot N. Sane Trilogy", platform:"PS4", img:"https://images.pushsquare.com/d83c39ea17048/crash-bandicoot-n-sane-trilogy-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"A Way Out", platform:"PS4", w:"A Way Out (video game)", img:"", size:"~20 GB"},
+  {name:"It Takes Two", platform:"PS4", img:"https://images.pushsquare.com/b3b248d0e3474/it-takes-two-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Resident Evil 2", platform:"PS4", w:"Resident Evil 2 (2019 video game)", img:"https://images.pushsquare.com/86d9c94c3b445/resident-evil-2-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"Resident Evil 7: Biohazard", platform:"PS4", img:"https://images.pushsquare.com/321e9e4f8c6f5/resident-evil-7-biohazard-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"Call of Duty: WWII", platform:"PS4", img:"https://images.pushsquare.com/205885977a137/call-of-duty-wwii-cover.cover_300x.jpg", size:"~90 GB"},
+  {name:"The Witcher 3: Wild Hunt", platform:"PS4", img:"https://images.pushsquare.com/a606276ea6a46/witcher-3-wild-hunt-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Mafia: Definitive Edition", platform:"PS4", img:"https://images.pushsquare.com/aa52e4eb217ed/mafia-definitive-edition-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Crash Bandicoot 4: It's About Time", platform:"PS4", img:"https://images.pushsquare.com/2f3c50c04a7b9/crash-bandicoot-4-its-about-time-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"Tom Clancy's Ghost Recon: Wildlands", platform:"PS4", img:"https://images.pushsquare.com/98f51d73b2eab/tom-clancys-ghost-recon-wildlands-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Resident Evil 4 Remaster", platform:"PS4", w:"Resident Evil 4", img:"https://images.pushsquare.com/06d813c5a26e6/resident-evil-4-remaster-cover.cover_300x.jpg", size:"~12 GB"},
+  {name:"Resident Evil 3", platform:"PS4", w:"Resident Evil 3 (2020 video game)", img:"https://images.pushsquare.com/90f6c8925ebca/resident-evil-3-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Shadow of the Tomb Raider", platform:"PS4", img:"https://images.pushsquare.com/7f1c2f832c01a/shadow-of-the-tomb-raider-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Little Nightmares", platform:"PS4", img:"https://images.pushsquare.com/fd5c4e3f2e754/little-nightmares-cover.cover_300x.jpg", size:"~5 GB"},
+  {name:"The Last Guardian", platform:"PS4", img:"https://images.pushsquare.com/29b27db5befcc/last-guardian-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Need for Speed: Rivals", platform:"PS4", img:"https://images.pushsquare.com/7858c3ef862fb/need-for-speed-rivals-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Ben 10", platform:"PS4", w:"Ben 10 (2017 video game)", img:"https://images.pushsquare.com/45b753bf8f183/ben-10-cover.cover_300x.jpg", size:"~10 GB"},
+  {name:"Assassin's Creed Valhalla", platform:"PS4", img:"https://images.pushsquare.com/069f6c0e75a60/assassins-creed-valhalla-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Dragon Ball Xenoverse 2", platform:"PS4", img:"https://images.pushsquare.com/cfbe13c2cc221/dragon-ball-xenoverse-2-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"Unravel", platform:"PS4", w:"Unravel (video game)", img:"https://images.pushsquare.com/bd2021a796a19/unravel-cover.cover_300x.jpg", size:"~3 GB"},
+  {name:"Tomb Raider: Definitive Edition", platform:"PS4", w:"Tomb Raider (2013 video game)", img:"https://images.pushsquare.com/1b8739b390551/tomb-raider-definitive-edition-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Rise of the Tomb Raider", platform:"PS4", img:"https://images.pushsquare.com/c37871135d1ca/rise-of-the-tomb-raider-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Watch Dogs 2", platform:"PS4", img:"https://images.pushsquare.com/f7e0cd86c29c4/watch-dogs-2-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Gang Beasts", platform:"PS4", img:"", size:"~1 GB"},
+  {name:"Resident Evil Village", platform:"PS4", img:"https://images.pushsquare.com/2858125265733/resident-evil-village-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"Assassin's Creed Mirage", platform:"PS4", img:"https://images.pushsquare.com/95df0beb20a15/assassins-creed-mirage-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Assassin's Creed Origins", platform:"PS4", img:"https://images.pushsquare.com/3cadc62102cf6/assassins-creed-origins-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Battlefield V", platform:"PS4", img:"https://images.pushsquare.com/289902779c102/battlefield-v-cover.cover_300x.jpg", size:"~55 GB"},
+  {name:"Call of Duty: Modern Warfare Remastered", platform:"PS4", w:"Call of Duty 4: Modern Warfare", img:"https://images.pushsquare.com/65d37340bab5c/call-of-duty-modern-warfare-remastered-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Watch Dogs", platform:"PS4", w:"Watch Dogs (video game)", img:"https://images.pushsquare.com/07caa9fb1435f/watch-dogs-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"Outlast", platform:"PS4", w:"Outlast (video game)", img:"https://images.pushsquare.com/b982b4650db13/outlast-cover.cover_300x.jpg", size:"~5 GB"},
+  {name:"Batman: Return to Arkham", platform:"PS4", img:"https://images.pushsquare.com/29f318375df44/batman-return-to-arkham-cover.cover_300x.jpg", size:"~70 GB"},
+  {name:"Little Nightmares II", platform:"PS4", img:"https://images.pushsquare.com/ac827943cbe59/little-nightmares-ii-cover.cover_300x.jpg", size:"~10 GB"},
+  {name:"Hitman 2", platform:"PS4", w:"Hitman 2 (2018 video game)", img:"https://images.pushsquare.com/1768e3762aaed/hitman-2-cover.cover_300x.jpg", size:"~60 GB"},
+  {name:"Resident Evil 6", platform:"PS4", img:"https://images.pushsquare.com/5d3540620ea49/resident-evil-6-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"WWE 2K18", platform:"PS4", img:"https://images.pushsquare.com/9ac13e0ee598b/wwe-2k18-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"SpongeBob SquarePants: Battle for Bikini Bottom - Rehydrated", platform:"PS4", w:"SpongeBob SquarePants: Battle for Bikini Bottom – Rehydrated", img:"https://images.pushsquare.com/e21163fbea941/spongebob-squarepants-battle-for-bikini-bottom-rehydrated-cover.cover_300x.jpg", size:"~10 GB"},
+  {name:"Resident Evil: Revelations 2", platform:"PS4", img:"https://images.pushsquare.com/5de7826ed7f3e/resident-evil-revelations-2-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Mafia II: Definitive Edition", platform:"PS4", w:"Mafia II", img:"https://images.pushsquare.com/393dc5d7a6510/mafia-ii-definitive-edition-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"WWE 2K24", platform:"PS4", img:"https://images.pushsquare.com/feb3c6be7bf00/wwe-2k24-cover.cover_300x.jpg", size:"~60 GB"},
+  {name:"Sleeping Dogs: Definitive Edition", platform:"PS4", w:"Sleeping Dogs (video game)", img:"https://images.pushsquare.com/c78324f441369/sleeping-dogs-definitive-edition-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Call of Duty: Infinite Warfare", platform:"PS4", img:"https://images.pushsquare.com/549c7ebe4026c/call-of-duty-infinite-warfare-cover.cover_300x.jpg", size:"~70 GB"},
+  {name:"SnowRunner", platform:"PS4", img:"https://images.pushsquare.com/79c5cfae447ab/snowrunner-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"Teenage Mutant Ninja Turtles: Mutants in Manhattan", platform:"PS4", img:"https://images.pushsquare.com/eafdc514a1aaa/teenage-mutant-ninja-turtles-mutants-in-manhattan-cover.cover_300x.jpg", size:"~10 GB"},
+  {name:"Cars 3: Driven to Win", platform:"PS4", img:"https://images.pushsquare.com/1ce135c561488/cars-3-driven-to-win-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"The Evil Within 2", platform:"PS4", img:"https://images.pushsquare.com/4faba16ed5a5d/evil-within-2-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Sniper Elite 5", platform:"PS4", img:"https://images.pushsquare.com/f2a8470a993b3/sniper-elite-5-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"Sonic Superstars", platform:"PS4", img:"https://images.pushsquare.com/32a2e1b71476b/sonic-superstars-cover.cover_300x.jpg", size:"~10 GB"},
+  {name:"Sonic X Shadow Generations", platform:"PS4", img:"https://images.pushsquare.com/29430a3c266d8/sonic-x-shadow-generations-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Far Cry Primal", platform:"PS4", img:"https://images.pushsquare.com/3d359785a3cc8/far-cry-primal-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Mafia III: Definitive Edition", platform:"PS4", w:"Mafia III", img:"https://images.pushsquare.com/aa5dd420ec970/mafia-iii-definitive-edition-cover.cover_300x.jpg", size:"~50 GB"},
+  {name:"DmC: Devil May Cry - Definitive Edition", platform:"PS4", w:"DmC: Devil May Cry", img:"https://images.pushsquare.com/154e0023cf06a/dmc-devil-may-cry---definitive-edition-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"LEGO Batman 3: Beyond Gotham", platform:"PS4", w:"Lego Batman 3: Beyond Gotham", img:"https://images.pushsquare.com/bf6397941168d/lego-batman-3-beyond-gotham-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Homefront: The Revolution", platform:"PS4", img:"https://images.pushsquare.com/093f41d11145c/homefront-the-revolution-cover.cover_300x.jpg", size:"~35 GB"},
+  {name:"Alan Wake Remastered", platform:"PS4", img:"https://images.pushsquare.com/f1d235eb47541/alan-wake-remastered-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"The Lord of the Rings: Gollum", platform:"PS4", img:"https://images.pushsquare.com/4323685cd5519/lord-of-the-rings-gollum-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Sniper: Ghost Warrior 3", platform:"PS4", img:"https://images.pushsquare.com/12ada2e485421/sniper-ghost-warrior-3-cover.cover_300x.jpg", size:"~60 GB"},
+  {name:"Crash Team Racing Nitro-Fueled", platform:"PS4", img:"https://images.pushsquare.com/fe41540835a89/crash-team-racing-nitro-fueled-cover.cover_300x.jpg", size:"~25 GB"},
+  {name:"Bully", platform:"PS4", w:"Bully (video game)", img:"", size:"~10 GB"},
+  {name:"God of War", platform:"PS4", w:"God of War (2018 video game)", img:"https://images.pushsquare.com/ae86226a4f29b/god-of-war-cover.cover_300x.jpg", size:"~45 GB"},
+  {name:"eFootball PES 2021: Season Update", platform:"PS4", w:"EFootball PES 2021", img:"https://images.pushsquare.com/aba592896666e/efootball-pes-2021-season-update-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Dark Souls III", platform:"PS4", img:"https://images.pushsquare.com/973e3664ae3c3/dark-souls-iii-cover.cover_300x.jpg", size:"~30 GB"},
+  {name:"God of War (2005)", platform:"PS4", w:"God of War (2005 video game)", img:"", size:"~5 GB"},
+  {name:"God of War II", platform:"PS4", img:"", size:"~8 GB"},
+  {name:"God of War III Remastered", platform:"PS4", w:"God of War III", img:"https://images.pushsquare.com/2445b9ef8eb8c/god-of-war-iii-remastered-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"God of War: Ascension", platform:"PS4", img:"", size:"~35 GB"},
+  {name:"God of War Ragnarök", platform:"PS4", img:"https://images.pushsquare.com/3af3b83b44824/god-of-war-ragnarok-cover.cover_300x.jpg", size:"~90 GB"},
+  {name:"Sniper: Ghost Warrior 2", platform:"PS4", img:"", size:"~10 GB"},
+  {name:"Sniper Elite 4", platform:"PS4", img:"https://images.pushsquare.com/5b41953a726ae/sniper-elite-4-cover.cover_300x.jpg", size:"~60 GB"},
+  {name:"Sniper Elite V2 Remastered", platform:"PS4", w:"Sniper Elite V2", img:"https://images.pushsquare.com/13b102bc9fb25/sniper-elite-v2-remastered-cover.cover_300x.jpg", size:"~20 GB"},
+  {name:"Sniper Ghost Warrior Contracts", platform:"PS4", img:"https://images.pushsquare.com/dbc589c5580bb/sniper-ghost-warrior-contracts-cover.cover_300x.jpg", size:"~40 GB"},
+  {name:"Sniper Ghost Warrior Contracts 2", platform:"PS4", img:"", size:"~40 GB"},
+  {name:"Resident Evil HD Remaster", platform:"PS4", w:"Resident Evil (2002 video game)", img:"", size:"~20 GB"},
+  {name:"Resident Evil 0", platform:"PS4", w:"Resident Evil Zero", img:"", size:"~15 GB"},
+  {name:"Resident Evil 5", platform:"PS4", img:"https://images.pushsquare.com/b4f121f93dcd1/resident-evil-5-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"Resident Evil: Revelations", platform:"PS4", img:"https://images.pushsquare.com/cc5c8a29ed128/resident-evil-revelations-cover.cover_300x.jpg", size:"~15 GB"},
+  {name:"Resident Evil – Code: Veronica X", platform:"PS4", w:"Resident Evil – Code: Veronica", img:"", size:"~5 GB"}
+];
+/* ====== پاکێج: یاری، بها و قەبارێ هاردی ل ڤێرێ بگوهۆڕە ====== */
+var WHATSAPP="9647505047363";
+var PACKAGES=[
+  {id:"500", title:"500 GB", price:"15,000 IQD", games:[
+    "Grand Theft Auto V",
+    "A Way Out",
+    "God of War",
+    "Need for Speed Payback",
+    "EA Sports FC 27",
+    "Red Dead Redemption",
+    "Call of Duty: Ghosts",
+    "Minecraft",
+    "Resident Evil 4",
+    "Crash Bandicoot N. Sane Trilogy",
+    "Battlefield V",
+    "Sekiro: Shadows Die Twice"]},
+  {id:"1tb", title:"1 TB", price:"20,000 IQD", games:[
+    "Grand Theft Auto V",
+    "EA Sports FC 27",
+    "PES 27",
+    "Call of Duty: Black Ops 3",
+    "Need for Speed Heat",
+    "The Last of Us Remastered",
+    "Elden Ring",
+    "Ghost of Tsushima",
+    "Uncharted 4: A Thief's End",
+    "Red Dead Redemption 2",
+    "Tekken 7",
+    "Sekiro: Shadows Die Twice",
+    "Mortal Kombat 11",
+    "Mafia III: Definitive Edition",
+    "Assassin's Creed Valhalla",
+    "Assassin's Creed Mirage"]}
+];
+/* ================================== */
+var filter="All",query="",page=1,PER=15,view=null;
+var PICK=[];try{PICK=JSON.parse(localStorage.getItem("picked")||"[]")}catch(e){PICK=[]}
+function savePick(){try{localStorage.setItem("picked",JSON.stringify(PICK))}catch(e){}}
+function byName(n){for(var i=0;i<GAMES.length;i++)if(GAMES[i].name===n)return GAMES[i];return null}
+function gb(x){var m=x&&x.size&&String(x.size).match(/[\d.]+/);return m?parseFloat(m[0]):0}
+function totalGB(names){return Math.round(names.reduce(function(t,n){return t+gb(byName(n))},0))}
+PICK=PICK.filter(byName);
+
+/* وێنە: ژ Wikipedia دهێنە ئینان و ل مۆبایلێ دهێنە پاراستن */
+var COVERS={},TRIED={};
+try{COVERS=JSON.parse(localStorage.getItem("covers3")||"{}")}catch(e){COVERS={}}
+function saveCovers(){try{localStorage.setItem("covers3",JSON.stringify(COVERS))}catch(e){}}
+function wt(x){return x.w||x.name}
+function src(x){return x.img||COVERS[wt(x)]||""}
+var API="https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&pilicense=any&pithumbsize=320";
+function getJSON(u,tries){
+  return fetch(u).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){
+    if(tries>0)return new Promise(function(r){setTimeout(r,1200)}).then(function(){return getJSON(u,tries-1)});
+    return null;
+  });
+}
+function fetchBatch(titles){
+  return getJSON(API+"&redirects=1&pilimit=50&titles="+encodeURIComponent(titles.join("|")),2).then(function(d){
+    if(!d||!d.query)return;
+    var q=d.query,map={};
+    titles.forEach(function(t){map[t]=t});
+    (q.normalized||[]).concat(q.redirects||[]).forEach(function(n){for(var k in map)if(map[k]===n.from)map[k]=n.to});
+    var byTitle={},pages=q.pages||{};
+    Object.keys(pages).forEach(function(id){var p=pages[id];if(p.thumbnail)byTitle[p.title]=p.thumbnail.source});
+    titles.forEach(function(t){if(byTitle[map[t]])COVERS[t]=byTitle[map[t]]});
+    saveCovers();
+  });
+}
+function searchOne(x){
+  return getJSON(API+"&generator=search&gsrlimit=1&gsrsearch="+encodeURIComponent(x.name+" video game"),1).then(function(d){
+    var p=d&&d.query&&d.query.pages;if(!p)return;
+    var id=Object.keys(p)[0];if(p[id].thumbnail){COVERS[wt(x)]=p[id].thumbnail.source;saveCovers()}
+  });
+}
+function pool(items,n,fn){
+  var i=0;function next(){if(i>=items.length)return Promise.resolve();var it=items[i++];return fn(it).then(next,next)}
+  var w=[];for(var k=0;k<n;k++)w.push(next());return Promise.all(w);
+}
+/* پێشی وێنێن پەڕا نوکە، پاشی یێن پەڕێن دی ل پشت */
+function loadFor(list){
+  var need=list.filter(function(x){return !src(x)&&!TRIED[wt(x)]});
+  if(!need.length)return Promise.resolve();
+  need.forEach(function(x){TRIED[wt(x)]=1});
+  var titles=need.map(wt),jobs=[];
+  for(var i=0;i<titles.length;i+=50)jobs.push(fetchBatch(titles.slice(i,i+50)));
+  return Promise.all(jobs).then(function(){
+    paint();
+    var miss=need.filter(function(x){return !src(x)});
+    return pool(miss,4,function(x){return searchOne(x).then(paint)});
+  }).then(paint);
+}
+function paint(){
+  document.querySelectorAll(".game").forEach(function(d){
+    var x=GAMES[+d.dataset.i],p=d.querySelector(".pic"),u=src(x);
+    if(!u||p.dataset.src===u)return;
+    p.dataset.src=u;
+    var im=new Image();im.alt=x.name;im.decoding="async";im.referrerPolicy="no-referrer";
+    im.onload=function(){p.textContent="";p.appendChild(im);requestAnimationFrame(function(){im.className="on"})};
+    im.onerror=function(){if(x.img){x.img="";p.dataset.src="";loadFor([x])}};
+    im.src=u;
+  });
+}
+
+function currentList(){
+  if(filter==="Selected")return PICK.map(byName).filter(function(x){return x&&x.name.toLowerCase().indexOf(query)>-1});
+  return GAMES.filter(function(x){
+    return (filter==="All"||x.platform===filter)&&x.name.toLowerCase().indexOf(query)>-1;
+  }).sort(function(a,b){return a.name.localeCompare(b.name,"en",{sensitivity:"base",numeric:true})});
+}
+function toggle(n,d){
+  var k=PICK.indexOf(n);if(k>-1)PICK.splice(k,1);else PICK.push(n);
+  savePick();
+  if(filter==="Selected"){render();return}
+  if(d){var on=k<0;d.classList.toggle("sel",on);d.setAttribute("aria-pressed",on)}
+  var st=document.querySelector(".seltab");if(st)st.textContent="✓ My selection ("+PICK.length+")";
+  renderCart();
+}
+function waLink(text){return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(text)}
+function pickText(){
+  return "سلاڤ، ئەز ڤان یاریان دخوازم:\n"+PICK.map(function(n,i){return (i+1)+". "+n}).join("\n")+
+    "\n\nکۆم: "+PICK.length+" یاری · ~"+totalGB(PICK)+" GB";
+}
+function renderCart(){
+  var c=document.getElementById("cart"),show=PICK.length>0&&!view&&filter!=="Selected";
+  c.classList.toggle("show",show);document.body.classList.toggle("has-cart",show);
+  document.getElementById("sum").innerHTML="<b>"+PICK.length+"</b> selected · ~"+totalGB(PICK)+" GB";
+  document.getElementById("waSel").href=waLink(pickText());
+}
+function renderSelHead(){
+  var h=document.getElementById("selhead");h.innerHTML="";
+  if(filter!=="Selected")return;
+  var t=document.createElement("h2");t.textContent="✓ My selection";
+  var m=document.createElement("div");m.className="meta";m.textContent=PICK.length+" games · ~"+totalGB(PICK)+" GB";
+  h.appendChild(t);h.appendChild(m);
+  if(!PICK.length)return;
+  var row=document.createElement("div");row.className="row";
+  var wa=document.createElement("a");wa.className="btn wa";wa.target="_blank";wa.rel="noopener";wa.textContent="Send on WhatsApp";wa.href=waLink(pickText());
+  var cp=document.createElement("button");cp.className="btn";cp.textContent="Copy";
+  cp.onclick=function(){
+    (navigator.clipboard?navigator.clipboard.writeText(pickText()):Promise.reject()).then(function(){cp.textContent="Copied"},function(){cp.textContent="Copy failed"});
+    setTimeout(function(){cp.textContent="Copy"},1500);
+  };
+  var cl=document.createElement("button");cl.className="btn";cl.textContent="Clear all";
+  cl.onclick=function(){if(confirm("Remove all selected games?")){PICK=[];savePick();render()}};
+  row.appendChild(wa);row.appendChild(cp);row.appendChild(cl);h.appendChild(row);
+}
+function renderPacks(){
+  var box=document.getElementById("packs");box.innerHTML="";
+  PACKAGES.forEach(function(pk){
+    var names=pk.games.filter(byName);
+    var b=document.createElement("button");b.className="pack";
+    b.innerHTML='<span class="cap"></span><span class="meta"></span><span class="price"></span>';
+    b.children[0].textContent="💽 "+pk.title;
+    b.children[1].textContent=names.length+" games · ~"+totalGB(names)+" GB";
+    b.children[2].textContent=pk.price;
+    b.onclick=function(){view=pk.id;render();window.scrollTo({top:0,behavior:"smooth"})};
+    box.appendChild(b);
+  });
+}
+function renderPackage(pk){
+  var names=pk.games.filter(byName),h=document.getElementById("pkghead");
+  h.innerHTML="";
+  var back=document.createElement("button");back.className="linkbtn";back.textContent="‹ All games";
+  back.onclick=function(){view=null;render()};
+  var t=document.createElement("h2");t.textContent="💽 "+pk.title+" package";
+  var pr=document.createElement("div");pr.className="price";pr.textContent=pk.price;
+  var m=document.createElement("div");m.className="meta";m.textContent=names.length+" games · ~"+totalGB(names)+" GB";
+  var row=document.createElement("div");row.className="row";
+  var wa=document.createElement("a");wa.className="btn wa";wa.target="_blank";wa.rel="noopener";wa.textContent="Choose this package";
+  wa.href=waLink("سلاڤ، ئەز پاکێجا "+pk.title+" دخوازم ("+names.length+" یاری · "+pk.price+"):\n"+names.map(function(n,i){return (i+1)+". "+n}).join("\n"));
+  row.appendChild(wa);
+  h.appendChild(back);h.appendChild(t);h.appendChild(pr);h.appendChild(m);h.appendChild(row);
+  var g=document.getElementById("grid");g.innerHTML="";
+  var list=names.map(byName);
+  list.forEach(function(x){g.appendChild(card(x,false))});
+  document.getElementById("pager").innerHTML="";
+  paint();loadFor(list);
+}
+function render(scroll){
+  document.body.classList.toggle("pkg",!!view);
+  renderPacks();renderCart();
+  if(view){var pk=PACKAGES.filter(function(p){return p.id===view})[0];if(pk){renderPackage(pk);return}view=null;document.body.classList.remove("pkg")}
+  var t=document.getElementById("tabs");t.innerHTML="";
+  ["All","PS5","PS4","PS3","Selected"].forEach(function(f){
+    var n=f==="All"?GAMES.length:f==="Selected"?PICK.length:GAMES.filter(function(x){return x.platform===f}).length;
+    var b=document.createElement("button");b.textContent=(f==="Selected"?"✓ My selection":f)+" ("+n+")";b.setAttribute("aria-pressed",f===filter);
+    if(f==="Selected")b.className="seltab";
+    b.onclick=function(){filter=f;page=1;render()};t.appendChild(b);
+  });
+  document.body.classList.toggle("selview",filter==="Selected");
+  renderSelHead();
+  var list=currentList(),pages=Math.max(1,Math.ceil(list.length/PER));
+  if(page>pages)page=pages;
+  var shown=list.slice((page-1)*PER,page*PER);
+  var g=document.getElementById("grid");g.innerHTML="";
+  document.getElementById("bar").textContent=list.length?(list.length+" games · Page "+page+" / "+pages):"";
+  if(!list.length){g.innerHTML='<div class="empty"></div>';g.firstChild.textContent=filter==="Selected"&&!query?"No games selected yet. Go to All and tap games to choose them.":"No games found."}
+  shown.forEach(function(x){g.appendChild(card(x,true))});
+  renderPager(pages);
+  paint();
+  loadFor(shown).then(function(){return loadFor(list)}).then(function(){return loadFor(GAMES)});
+  if(scroll)document.getElementById("bar").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function card(x,selectable){
+    var d=document.createElement("div");d.className="game";d.dataset.i=GAMES.indexOf(x);
+    var p=document.createElement("div");p.className="pic";p.textContent="🎮";
+    var i=document.createElement("div");i.className="info";
+    var n=document.createElement("div");n.className="name";n.textContent=x.name;
+    var s=document.createElement("span");s.className="tag "+x.platform;s.textContent=x.platform;
+    i.appendChild(n);
+    if(x.size){var z=document.createElement("div");z.className="size";z.textContent="💾 "+x.size;i.appendChild(z)}
+    i.appendChild(s);d.appendChild(p);d.appendChild(i);
+    if(selectable){
+      var c=document.createElement("span");c.className="check";c.textContent="✓";c.setAttribute("aria-hidden","true");d.appendChild(c);
+      d.tabIndex=0;d.setAttribute("role","button");
+      var on=PICK.indexOf(x.name)>-1;d.classList.toggle("sel",on);d.setAttribute("aria-pressed",on);
+      d.setAttribute("aria-label",x.name);
+      d.onclick=function(){toggle(x.name,d)};
+      d.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle(x.name,d)}};
+    }
+    return d;
+}
+function renderPager(pages){
+  var nav=document.getElementById("pager");nav.innerHTML="";
+  if(pages<2)return;
+  function btn(label,to,opts){
+    var b=document.createElement("button");b.textContent=label;
+    if(opts&&opts.cur)b.setAttribute("aria-current","page");
+    if(opts&&opts.dis)b.disabled=true;
+    if(opts&&opts.aria)b.setAttribute("aria-label",opts.aria);
+    b.onclick=function(){page=to;render(true)};nav.appendChild(b);
+  }
+  btn("‹",page-1,{dis:page===1,aria:"Previous page"});
+  for(var k=1;k<=pages;k++)btn(String(k),k,{cur:k===page,aria:"Page "+k});
+  btn("›",page+1,{dis:page===pages,aria:"Next page"});
+}
+document.getElementById("viewSel").onclick=function(){filter="Selected";page=1;render();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("q").oninput=function(e){query=e.target.value.trim().toLowerCase();page=1;render()};
+render();
+</script>
+</body>
+</html>
