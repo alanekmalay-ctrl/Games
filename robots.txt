@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://alanekmalay-ctrl.github.io/Games/sitemap.xml

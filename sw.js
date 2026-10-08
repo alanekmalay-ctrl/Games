@@ -1,5 +1,5 @@
 /* HSHYAR OFFICE · Games — app worker */
-var V="hshyar-games-v2";
+var V="hshyar-games-v3";
 var CORE=["./","index.html","manifest.webmanifest","icon-192.png","icon-512.png","apple-touch-icon.png","favicon.png"];
 self.addEventListener("install",function(e){
   e.waitUntil(caches.open(V).then(function(c){return c.addAll(CORE)}).then(function(){return self.skipWaiting()}));
